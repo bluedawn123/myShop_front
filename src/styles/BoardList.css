@@ -1,0 +1,71 @@
+/* Global CSS for BoardList */
+body {
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px; /* 화면 중앙에 맞추기 위해 최대 너비 설정 */
+  margin: 20px auto; /* 화면 중앙 배치 */
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
+  border-radius: 8px;
+}
+
+.table-container {
+  overflow-x: auto; /* 테이블이 화면을 벗어나지 않도록 스크롤 추가 */
+}
+
+table {
+  margin-bottom: 20px;
+}
+
+thead th {
+  background-color: #007bff; /* 헤더 배경색 */
+  color: #ffffff; /* 헤더 텍스트 색상 */
+  text-align: center;
+}
+
+tbody td {
+  text-align: center; /* 셀 중앙 정렬 */
+  vertical-align: middle;
+}
+
+button {
+  min-width: 100px;
+}
+
+.d-flex {
+  justify-content: flex-end; /* 버튼 우측 정렬 */
+}
+
+.d-flex > button {
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+button.primary {
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+button.secondary {
+  background-color: #6c757d;
+  border: none;
+  color: #fff;
+}
+
+button.danger {
+  background-color: #dc3545;
+  border: none;
+  color: #fff;
+}
+
+button:hover {
+  opacity: 0.9; /* 버튼에 호버 효과 */
+}
