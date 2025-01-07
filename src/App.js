@@ -1,14 +1,14 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import BoardList from './BoardList';
-import Button from 'react-bootstrap/Button';
-import Write from './Write';
+// import BoardList from './BoardList';
+// import Button from 'react-bootstrap/Button';
+// import Write from './Write';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import React from "react";
-import AdminPage from "./components/AdminPage";
-import UserPage from "./components/UserPage";
+import AdminPage from "./components/admin/AdminPage";
+import UserPage from "./components/user/UserPage";
 import LoginPage from "./components/LoginPage";
-import Lesson from "./components/Lesson";
+import Lesson from "./components/etc/Lesson";
 
 function App() {
   const isAuthenticated = () => {

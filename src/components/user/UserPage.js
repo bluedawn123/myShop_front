@@ -1,7 +1,5 @@
 import React from "react";
-import '../App.css';
-import BoardList from "../BoardList"; // 경로는 App.js에서와 동일하게 맞추세요.
-import Write from "../Write";
+import '../../App.css';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useState } from 'react';

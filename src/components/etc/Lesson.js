@@ -1,6 +1,6 @@
 import React from "react";
-import BoardList from "../BoardList"; // 경로는 App.js에서와 동일하게 맞추세요.
-import Write from "../Write";
+import BoardList from "../../BoardList"; // 경로는 App.js에서와 동일하게 맞추세요.
+import Write from "../../Write";
 
 function UserPage() {
   return (
