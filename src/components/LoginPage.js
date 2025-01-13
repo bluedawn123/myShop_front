@@ -7,23 +7,36 @@ function LoginPage() {
   const [error, setError] = useState("");
 
   const isAdmin = () => {
-  const token = localStorage.getItem("token");
-  if (!token) return false;
-
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1])); // JWT에서 payload 추출
-    return payload.role === "admin";
-  } catch (error) {
-    console.error("Invalid token:", error);
-    return false;
-  }
-};
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+  
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1])); // JWT에서 payload 추출
+      const now = Math.floor(Date.now() / 1000); // 현재 시간 (초)
+  
+      if (payload.exp < now) {
+        // 토큰 만료
+        console.warn("토큰이 만료되었습니다.");
+        localStorage.removeItem("token"); // 만료된 토큰 삭제
+        return false;
+      }
+  
+      return payload.role === "admin";
+    } catch (error) {
+      console.error("Invalid token:", error);
+      return false;
+    }
+  };
 
   const handleLogin = async () => {
-    setError(""); // 초기화
+    setError(""); // 에러 메시지 초기화
 
     try {
-      const response = await fetch("http://localhost:8000/login", {
+      // 환경 변수에서 API URL 가져오기
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+      
+      // 변경된 API 경로 사용
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +45,7 @@ function LoginPage() {
       });
 
       const data = await response.json();
-      console.log('Response Data:', data); // 추가된 로그
+      console.log("Response Data:", data); // 응답 데이터 로그
 
       if (response.ok) {
         // 로그인 성공

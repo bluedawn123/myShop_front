@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Accordion, Modal, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Accordion } from "react-bootstrap";
 import { Dashboard, People, ShoppingCart } from "@mui/icons-material";
 import ProductList from "./ProductList";
 import UserList from "./UserList";
@@ -11,14 +11,58 @@ import { useNavigate } from "react-router-dom";
 function AdminPage() {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
+  const [timeRemaining, setTimeRemaining] = useState(null);
+
+  // JWT 만료 확인 및 자동 로그아웃 처리
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        // JWT Payload 추출
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const now = Math.floor(Date.now() / 1000); // 현재 시간 (초)
+
+        if (payload.exp < now) {
+          // 토큰이 만료된 경우
+          alert("세션이 만료되었습니다. 다시 로그인하세요.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          // 남은 시간 계산 후 상태 업데이트 및 자동 로그아웃 예약
+          const timeLeft = payload.exp - now;
+          setTimeRemaining(timeLeft);
+
+          const interval = setInterval(() => {
+            setTimeRemaining((prev) => {
+              if (prev <= 1) {
+                clearInterval(interval);
+                alert("세션이 만료되었습니다. 다시 로그인하세요.");
+                localStorage.removeItem("token");
+                navigate("/login");
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+
+          return () => clearInterval(interval);
+        }
+      } catch (error) {
+        console.error("JWT 처리 오류:", error);
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    } else {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleLogout = () => {
     const isConfirmed = window.confirm("로그아웃 하시겠습니까?");
     if (isConfirmed) {
-      // JWT 토큰 삭제
       localStorage.removeItem("token");
-  
-      // 홈 페이지로 이동
       navigate("/");
     }
   };
@@ -146,7 +190,7 @@ function AdminPage() {
                   </ul>
                 </Accordion.Body>
               </Accordion.Item>
-              {/* 주문 관리 */}
+              {/* 게시글 관리 */}
               <Accordion.Item eventKey="4" className="custom-accordion-item">
                 <Accordion.Header className="custom-accordion-header">
                   <ShoppingCart className="me-2" /> 게시글 관리
@@ -167,6 +211,11 @@ function AdminPage() {
 
           {/* 로그아웃 버튼 */}
           <div className="mt-auto text-center">
+            {timeRemaining !== null && (
+              <div className="text-warning mb-2">
+                세션 만료까지: {Math.floor(timeRemaining / 60)}분 {timeRemaining % 60}초
+              </div>
+            )}
             <button
               onClick={handleLogout}
               className="btn btn-danger w-100"
