@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function ProductManagement() {
+function ProductAdd() {
   const [products, setProducts] = useState([]); // 상품 목록 상태
 
   useEffect(() => {
@@ -27,4 +27,4 @@ function ProductManagement() {
   );
 }
 
-export default ProductManagement;
+export default ProductAdd;

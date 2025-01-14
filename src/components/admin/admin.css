@@ -1,0 +1,84 @@
+/* components/admin/admin.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
+.container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+  color: #222;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+form {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1em;
+  color: #444;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 1em;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #8b9fb9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #707780;
+}
+
+.category-list {
+  margin-top: 30px;
+}
+
+.category-item {
+  padding: 15px;
+  background: #f5f5f5;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-item strong {
+  font-size: 1.1em;
+  color: #333;
+}
+
+.category-item div {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 5px;
+}

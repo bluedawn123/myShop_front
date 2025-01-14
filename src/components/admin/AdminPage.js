@@ -5,6 +5,7 @@ import ProductList from "./ProductList";
 import UserList from "./UserList";
 import OrderList from "./OrderList";
 import ProductAdd from "./ProductAdd";
+import CategoryControl from "./CategoryControl";
 import "../../styles/AdminPage.css";
 import { useNavigate } from "react-router-dom";
 
@@ -73,6 +74,8 @@ function AdminPage() {
         return <ProductList />;
       case "products_add":
         return <ProductAdd />;
+      case "category_control":
+          return <CategoryControl />;
       case "users":
         return <UserList />;
       case "orders":
@@ -122,6 +125,12 @@ function AdminPage() {
                       className="custom-sidebar-item"
                     >
                       상품 추가
+                    </li>
+                    <li
+                      onClick={() => setSelectedMenu("category_control")}
+                      className="custom-sidebar-item"
+                    >
+                      카테고리 관리
                     </li>
                     <li
                       onClick={() => setSelectedMenu("products_inventory")}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function ProductManagement() {
+function ProductList() {
   const [products, setProducts] = useState([]); // 상품 목록 상태
 
   useEffect(() => {
@@ -11,7 +11,7 @@ function ProductManagement() {
 
   return (
     <div>
-      <h2>상품 관리</h2>
+      <h2>상품 관리 list</h2>
       {products.length === 0 ? (
         <p>등록된 상품이 없습니다.</p> // 상품이 없을 때 메시지 출력
       ) : (
@@ -27,4 +27,4 @@ function ProductManagement() {
   );
 }
 
-export default ProductManagement;
+export default ProductList;
