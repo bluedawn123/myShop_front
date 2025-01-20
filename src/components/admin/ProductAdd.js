@@ -99,9 +99,52 @@ function ProductAdd() {
   return (
     <div className="product-add-container">
       <div className="product-images-section">
+        {/* 이미지 표시 영역 */}
+        {formData.images.length === 0 ? (
+          <div className="no-image-message">
+            <p>이미지가 없습니다.</p>
+          </div>
+        ) : (
+          <div>
+            {/* 대표 이미지 표시 */}
+            <div className="main-image-container">
+              <img
+                src={formData.images[0].preview}
+                alt="대표 이미지"
+                className="main-image"
+              />
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(0)}
+                className="remove-button main-image-remove"
+              >
+                ×
+              </button>
+            </div>
+            {/* 나머지 이미지 목록 */}
+            <ul className="thumbnail-list">
+              {formData.images.slice(1).map((image, index) => (
+                <li key={index + 1} className="thumbnail-item">
+                  <img
+                    src={image.preview}
+                    alt={`썸네일 ${index + 1}`}
+                    className="thumbnail-preview"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(index + 1)}
+                    className="remove-button"
+                  >
+                    ×
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {/* 이미지 추가 영역 */}
         <div className="image-upload">
           <label>이미지 추가:</label>
-          {/* key 속성을 변경해 컴포넌트를 강제 리렌더링 */}
           <input
             key={inputKey}
             type="file"
@@ -111,28 +154,10 @@ function ProductAdd() {
             className="form-input"
           />
         </div>
-        <ul className="image-list">
-          {formData.images.map((image, index) => (
-            <li key={index} className="image-item">
-              <img
-                src={image.preview}
-                alt={`미리 보기 ${index + 1}`}
-                className="image-preview"
-              />
-              <button
-                type="button"
-                onClick={() => handleRemoveImage(index)}
-                className="remove-button"
-              >
-                ×
-              </button>
-            </li>
-          ))}
-        </ul>
       </div>
       <div className="product-form-section">
         <form onSubmit={handleSubmit} className="product-add-form">
-          <div className="form-group">
+          <div className="form-group inline">
             <label>상품 이름:</label>
             <input
               type="text"
@@ -143,7 +168,7 @@ function ProductAdd() {
               className="form-input"
             />
           </div>
-          <div className="form-group">
+          <div className="form-group inline">
             <label>가격:</label>
             <input
               type="number"
@@ -154,7 +179,7 @@ function ProductAdd() {
               className="form-input"
             />
           </div>
-          <div className="form-group">
+          <div className="form-group inline">
             <label>카테고리 코드:</label>
             <input
               type="text"
@@ -165,7 +190,7 @@ function ProductAdd() {
               className="form-input"
             />
           </div>
-          <div className="form-group">
+          <div className="form-group inline">
             <label>브랜드:</label>
             <input
               type="text"

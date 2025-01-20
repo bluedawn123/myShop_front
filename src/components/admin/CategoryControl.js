@@ -81,8 +81,8 @@ function CategoryAdd() {
   };
 
   return (
-    <div className="container mt-4">
-      <h3>카테고리 추가</h3>
+    <div className="container mt-2">
+      <h3>기존 카테고리 확인</h3>
       <div className="row">
         <div className="col-md-4">
           <Form.Select
@@ -135,7 +135,8 @@ function CategoryAdd() {
         </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-5">
+        <h3>신규 카테고리 추가</h3>
         <Button onClick={() => handleShow("main")}>대분류 추가</Button>
         <Button
           onClick={() => handleShow("sub")}
