@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import Axios from 'axios';
 import Form from 'react-bootstrap/Form';
-// import "../styles/LoginPage.css";
 
-// Board Component: 단일 행을 렌더링
 class Board extends Component {
   render() {
-    const { id, title, registerId, date, onCheckboxChange } = this.props;
+    const { id, title, registerId, date, onRowClick, onCheckboxChange } = this.props;
 
     return (
-      <tr>
+      <tr onClick={() => onRowClick(id)}>
         <td>
-          <Form.Check 
+          <Form.Check
             type="checkbox"
             id={`default-checkbox-${id}`}
             value={id}
@@ -29,26 +28,23 @@ class Board extends Component {
   }
 }
 
-// BoardList Component: 전체 테이블 렌더링
 export default class BoardList extends Component {
   state = {
     BoardList: [],
-    checkList: []
+    checkList: [],
+    showModal: false, // 모달 표시 여부
+    selectedBoard: null, // 선택된 항목의 데이터
   };
 
-  // 체크박스 변경 이벤트 핸들러
   onCheckboxChange = (e) => {
     const { value } = e.target;
     this.setState((prevState) => ({
-      checkList: [...prevState.checkList, value]
-    }), () => {
-      console.log(this.state.checkList);
-    });
+      checkList: [...prevState.checkList, value],
+    }));
   };
 
-  // 서버에서 게시판 목록 가져오기
   getList = () => {
-    Axios.get('http://localhost:8000/list')
+    Axios.get('http://localhost:8000/board/list')
       .then((res) => {
         const { data } = res;
         console.log(data);
@@ -59,13 +55,23 @@ export default class BoardList extends Component {
       });
   };
 
-  // 컴포넌트가 마운트되었을 때 서버로부터 데이터 가져오기
   componentDidMount() {
     this.getList();
   }
 
+  // 모달 열기
+  handleRowClick = (id) => {
+    const selectedBoard = this.state.BoardList.find((item) => item.BOARD_ID === id);
+    this.setState({ selectedBoard, showModal: true });
+  };
+
+  // 모달 닫기
+  handleCloseModal = () => {
+    this.setState({ showModal: false, selectedBoard: null });
+  };
+
   render() {
-    const { BoardList } = this.state;
+    const { BoardList, showModal, selectedBoard } = this.state;
 
     return (
       <>
@@ -81,22 +87,46 @@ export default class BoardList extends Component {
           </thead>
           <tbody>
             {BoardList.map((item) => (
-              <Board 
+              <Board
                 key={item.BOARD_ID}
                 id={item.BOARD_ID}
                 title={item.BOARD_TITLE}
                 registerId={item.REGISTER_ID}
                 date={item.REGISTER_DATE}
                 onCheckboxChange={this.onCheckboxChange}
+                onRowClick={this.handleRowClick}
               />
             ))}
           </tbody>
         </Table>
+
         <div className="d-flex gap-1 mt-3">
           <Button variant="primary">글쓰기</Button>
           <Button variant="secondary">수정하기</Button>
           <Button variant="danger">삭제하기</Button>
         </div>
+
+        {/* 모달 */}
+        <Modal show={showModal} onHide={this.handleCloseModal} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>게시판 상세</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {selectedBoard && (
+              <>
+                <p><strong>번호:</strong> {selectedBoard.BOARD_ID}</p>
+                <p><strong>제목:</strong> {selectedBoard.BOARD_TITLE}</p>
+                <p><strong>작성자:</strong> {selectedBoard.REGISTER_ID}</p>
+                <p><strong>작성일:</strong> {selectedBoard.REGISTER_DATE}</p>
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleCloseModal}>
+              닫기
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
     );
   }

@@ -12,7 +12,7 @@ export default class Write extends Component {
   write = (e) => {
     //isert라는 주소로 요청,
     e.preventDefault();
-    Axios.post('http://localhost:8000/insert', { //axios의 두번째 인자는 넘길 데이터를 정의한다.
+    Axios.post('http://localhost:8000/board/insert', { //axios의 두번째 인자는 넘길 데이터를 정의한다.
       title : this.state.title,
       content : this.state.content,
     })  
