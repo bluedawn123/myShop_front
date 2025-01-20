@@ -1,115 +1,194 @@
 import React, { useState } from "react";
+import "../../styles/ProductAdd.css";
 
 function ProductAdd() {
-  const [productName, setProductName] = useState(""); // 상품명 상태
-  const [price, setPrice] = useState(""); // 가격 상태
-  const [category, setCategory] = useState(""); // 카테고리 상태
-  const [description, setDescription] = useState(""); // 설명 상태
-  const [image, setImage] = useState(null); // 이미지 파일 상태
-  const [preview, setPreview] = useState(null); // 이미지 미리보기 상태
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    category_code: "",
+    brand: "",
+    images: [], // 이미지 파일 저장
+  });
 
-  // 이미지 파일 선택 핸들러
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file); // 파일 저장
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result); // 미리보기 설정
-      };
-      reader.readAsDataURL(file); // 파일을 Data URL로 변환
-    }
-  };
+  const [inputKey, setInputKey] = useState(Date.now()); // 파일 입력 필드 고유 키
 
-  // 상품 등록 함수
-  const handleAddProduct = () => {
-    if (!productName || !price || !category || !image) {
-      alert("모든 필드를 입력해주세요!");
+  const handleAddImage = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      console.log("선택된 파일이 없습니다.");
       return;
     }
 
-    const productData = {
-      name: productName,
-      price: parseFloat(price),
-      category: category,
-      description: description,
-      image, // 이미지 파일
-    };
+    const files = Array.from(e.target.files);
+    console.log("선택된 파일 목록:", files);
 
-    console.log("등록된 상품:", productData);
-    alert("상품이 등록되었습니다!");
+    const newImages = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file), // 미리 보기 URL 생성
+    }));
 
-    // 초기화
-    setProductName("");
-    setPrice("");
-    setCategory("");
-    setDescription("");
-    setImage(null);
-    setPreview(null);
+    console.log("미리 보기 URL 생성 완료:", newImages);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      images: [...prevData.images, ...newImages],
+    }));
+
+    // 파일 입력 필드 초기화 대신 고유 키 업데이트로 컴포넌트 강제 리렌더링
+    setInputKey(Date.now());
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = formData.images.filter((_, i) => i !== index);
+
+    URL.revokeObjectURL(formData.images[index].preview);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      images: updatedImages,
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const uploadData = new FormData();
+    uploadData.append("name", formData.name);
+    uploadData.append("description", formData.description);
+    uploadData.append("price", formData.price);
+    uploadData.append("category_code", formData.category_code);
+    uploadData.append("brand", formData.brand);
+
+    formData.images.forEach((image, index) => {
+      uploadData.append(`images[${index}]`, image.file);
+    });
+
+    try {
+      const response = await fetch("http://localhost:5000/api/products", {
+        method: "POST",
+        body: uploadData,
+      });
+
+      if (response.ok) {
+        alert("상품이 성공적으로 추가되었습니다!");
+        setFormData({
+          name: "",
+          description: "",
+          price: "",
+          category_code: "",
+          brand: "",
+          images: [],
+        });
+      } else {
+        alert("상품 추가에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+      alert("서버에 연결하는 중 에러가 발생했습니다.");
+    }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>상품 등록</h2>
-
-      {/* 상품 입력 폼 */}
-      <div style={{ marginBottom: "20px" }}>
-        <div>
-          <label>상품명:</label>
+    <div className="product-add-container">
+      <div className="product-images-section">
+        <div className="image-upload">
+          <label>이미지 추가:</label>
+          {/* key 속성을 변경해 컴포넌트를 강제 리렌더링 */}
           <input
-            type="text"
-            placeholder="상품명을 입력하세요"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            key={inputKey}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleAddImage}
+            className="form-input"
           />
         </div>
-        <div>
-          <label>가격:</label>
-          <input
-            type="number"
-            placeholder="가격을 입력하세요"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>카테고리:</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">카테고리 선택</option>
-            <option value="의류">의류</option>
-            <option value="전자기기">전자기기</option>
-            <option value="생활용품">생활용품</option>
-            {/* 카테고리 추가 */}
-          </select>
-        </div>
-        <div>
-          <label>설명:</label>
-          <textarea
-            placeholder="상품 설명을 입력하세요"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>이미지:</label>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          {preview && (
-            <div style={{ marginTop: "10px" }}>
-              <p>미리보기:</p>
+        <ul className="image-list">
+          {formData.images.map((image, index) => (
+            <li key={index} className="image-item">
               <img
-                src={preview}
-                alt="미리보기"
-                style={{ width: "200px", height: "200px", objectFit: "cover" }}
+                src={image.preview}
+                alt={`미리 보기 ${index + 1}`}
+                className="image-preview"
               />
-            </div>
-          )}
-        </div>
-        <button style={{ marginTop: "20px" }} onClick={handleAddProduct}>
-          등록
-        </button>
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(index)}
+                className="remove-button"
+              >
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="product-form-section">
+        <form onSubmit={handleSubmit} className="product-add-form">
+          <div className="form-group">
+            <label>상품 이름:</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="form-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>가격:</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+              className="form-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>카테고리 코드:</label>
+            <input
+              type="text"
+              name="category_code"
+              value={formData.category_code}
+              onChange={handleChange}
+              required
+              className="form-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>브랜드:</label>
+            <input
+              type="text"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+              className="form-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>상품 설명:</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              className="form-input"
+            />
+          </div>
+          <button type="submit" className="submit-button">
+            추가
+          </button>
+        </form>
       </div>
     </div>
   );
