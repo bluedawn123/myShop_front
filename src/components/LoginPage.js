@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "../styles/LoginPage.css";
+import { Button, Form, Container, Row, Col } from "react-bootstrap";
+import styles from "../styles/LoginPage.module.css";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -9,18 +10,18 @@ function LoginPage() {
   const isAdmin = () => {
     const token = localStorage.getItem("token");
     if (!token) return false;
-  
+
     try {
       const payload = JSON.parse(atob(token.split(".")[1])); // JWT에서 payload 추출
       const now = Math.floor(Date.now() / 1000); // 현재 시간 (초)
-  
+
       if (payload.exp < now) {
         // 토큰 만료
         console.warn("토큰이 만료되었습니다.");
         localStorage.removeItem("token"); // 만료된 토큰 삭제
         return false;
       }
-  
+
       return payload.role === "admin";
     } catch (error) {
       console.error("Invalid token:", error);
@@ -32,10 +33,8 @@ function LoginPage() {
     setError(""); // 에러 메시지 초기화
 
     try {
-      // 환경 변수에서 API URL 가져오기
       const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
-      
-      // 변경된 API 경로 사용
+
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
@@ -48,7 +47,6 @@ function LoginPage() {
       console.log("Response Data:", data); // 응답 데이터 로그
 
       if (response.ok) {
-        // 로그인 성공
         localStorage.setItem("token", data.token); // JWT 저장
         alert("관리자로 로그인 성공");
 
@@ -59,7 +57,6 @@ function LoginPage() {
           window.location.href = "/";
         }
       } else {
-        // 로그인 실패
         setError(data.message || "로그인에 실패했습니다.");
       }
     } catch (err) {
@@ -69,35 +66,47 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-container">
-      <h1 className="login-title">로그인</h1>
-      {error && <p className="error-message">{error}</p>}
-      <div className="form-group">
-        <label htmlFor="username">아이디</label>
-        <input
-          id="username"
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="form-input"
-          placeholder="아이디를 입력하세요"
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="password">비밀번호</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="form-input"
-          placeholder="비밀번호를 입력하세요"
-        />
-      </div>
-      <button className="login-button" onClick={handleLogin}>
-        로그인
-      </button>
-    </div>
+    <Container>
+      <Row className="justify-content-center">
+        <Col xs={12} md={6}>
+          <div className={styles["login-container"]}>
+            <h1 className={styles["login-title"]}>로그인</h1>
+            {error && <p className={styles["error-message"]}>{error}</p>}
+            <Form>
+              <Form.Group controlId="username" className="mb-3">
+                <Form.Label>아이디</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className={styles["form-input"]}
+                  placeholder="아이디를 입력하세요"
+                />
+              </Form.Group>
+
+              <Form.Group controlId="password" className="mb-3">
+                <Form.Label>비밀번호</Form.Label>
+                <Form.Control
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={styles["form-input"]}
+                  placeholder="비밀번호를 입력하세요"
+                />
+              </Form.Group>
+
+              <Button
+                variant="primary"
+                className={styles["login-button"]}
+                onClick={handleLogin}
+              >
+                로그인
+              </Button>
+            </Form>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

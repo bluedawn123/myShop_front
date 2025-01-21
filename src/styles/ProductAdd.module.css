@@ -1,0 +1,199 @@
+.product-add-container {
+  max-width: 1600px; /* 1200px에서 1600px로 증가 */
+  margin: 3rem auto; /* 상하 여백 증가 */
+  padding: 3rem; /* 내부 여백 증가 */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem; /* 갭 크기도 증가 */
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-images-section {
+  border: 2px dashed #e0e0e0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.no-image-message {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.main-image-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.main-image {
+  width: 100%;
+  height: 400px; /* 300px에서 400px로 증가 */
+  object-fit: contain;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.thumbnail-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 100px에서 120px로 증가 */
+  gap: 1.2rem; /* 1rem에서 1.2rem로 갭 살짝 증가 */
+  padding: 0;
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.thumbnail-item {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.thumbnail-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+.remove-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s;
+}
+
+.remove-button:hover {
+  background-color: #ff0000;
+}
+
+.image-upload {
+  margin-top: 1.5rem;
+}
+
+.product-form-section {
+  padding: 1rem;
+}
+
+.product-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group.inline {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group.inline label {
+  flex: 0 0 120px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+textarea.form-input {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.submit-button {
+  background-color: #4a90e2;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.submit-button:hover {
+  background-color: #357abd;
+}
+
+.submit-button:active {
+  background-color: #2a609a;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 900px) {
+  .product-add-container {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .form-group.inline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-group.inline label {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* 파일 입력 필드 스타일링 */
+input[type="file"] {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background-color: #4a90e2;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: #357abd;
+}
